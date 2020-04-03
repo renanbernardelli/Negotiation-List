@@ -1,18 +1,26 @@
 class ListaNegociacoes {
 
     constructor() {
-        this._listaNegociacoes = [];
+        
+        this._negociacoes = [];
     }
 
     adiciona(negociacao) {
-        this._listaNegociacoes.push(negociacao);
+        
+        this._negociacoes.push(negociacao);
+    }
+
+    get negociacoes() {
+        
+        return [].concat(this._negociacoes);
     }
 
     esvazia() {
-        this._listaNegociacoes = [];
+        
+        this._negociacoes = [];
     }
-
-    get negociacoes(){
-        return [].concat(this._listaNegociacoes); //! progração defensiva usada para retornar uma cópia da lista (array vazio concatenado com minha lista), evitando qualquer modificação nela.
+    
+    get volumeTotal() {
+       return this._negociacoes.reduce((total, n) => total + n.volume, 0.0);
     }
 }

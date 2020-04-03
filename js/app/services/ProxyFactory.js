@@ -1,39 +1,36 @@
 class ProxyFactory {
-
-    static create(object, props, act) {
-
-        return new Proxy(object, {
-
-            get: function(target, prop, receiver) {
+    
+    static create(objeto, props, acao) {
+     
+        return new Proxy(objeto, {
                 
-                if (props.includes(prop) && ProxyFactory._isFunction(target[prop])) {
-
-                    return function() {
-                        
-                        console.log(`interceptando ${prop}`);
-                        Reflect.apply(target[prop], target, arguments);
-                        return act(target);
-                        
-                    }
-                }
-
-                return Reflect.get(target, prop, receiver);
-            },
-
-            set: function(target, prop, value, receiver) {
-
-                if (props.includes(prop)) {
+                get: function(target, prop, receiver) {
                     
-                    act(target);
+                    if(props.includes(prop) && ProxyFactory._ehFuncao(target[prop])) {
+                        
+                        return function() {
+                            
+                            console.log(`interceptando ${prop}`);
+                            let retorno = Reflect.apply(target[prop], target, arguments);
+                            acao(target);
+                            return retorno;
+                        }
+                    }
+                    
+                    return Reflect.get(target, prop, receiver);
+                },
+                
+                set: function(target, prop, value, receiver) {
+                    
+                    let retorno = Reflect.set(target, prop, value, receiver);
+                    if(props.includes(prop)) acao(target);
+                    return retorno;
                 }
-
-                return Reflect.set(target, prop, value, receiver);
-            }
-        })
+        });
     }
-
-    static _isFunction(func) {
-
+    
+    static _ehFuncao(func) {
+        
         return typeof(func) == typeof(Function);
     }
 }
