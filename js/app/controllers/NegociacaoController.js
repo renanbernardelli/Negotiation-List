@@ -45,13 +45,19 @@ class NegociacaoController {
             this._mensagem.texto = 'Negociações importadas com sucesso!'
         })
         .catch(error => this._mensagem.texto = error);
+
     };
     
+    ordena(coluna) {
+
+        this._listaNegociacoes.ordena((a, b) => a[coluna] - b[coluna]);
+    };
+
     apaga() {
         
         this._listaNegociacoes.esvazia();
         this._mensagem.texto = 'Negociações apagadas com sucesso';
-    }
+    };
     
     _criaNegociacao() {
         
@@ -59,7 +65,7 @@ class NegociacaoController {
             DateHelper.textoParaData(this._inputData.value),
             this._inputQuantidade.value,
             this._inputValor.value);    
-    }
+    };
     
     _limpaFormulario() {
      
@@ -67,5 +73,5 @@ class NegociacaoController {
         this._inputQuantidade.value = 1;
         this._inputValor.value = 0.0;
         this._inputData.focus();   
-    }
-}
+    };
+};
