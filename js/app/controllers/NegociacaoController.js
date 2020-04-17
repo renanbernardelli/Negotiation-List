@@ -16,7 +16,10 @@ class NegociacaoController {
        
         this._mensagem = new Bind(
             new Mensagem(), new MensagemView($('#mensagemView')),
-            'texto');       
+            'texto');
+
+        this._service = new NegociacaoService();
+        
     }
     
     adiciona(event) {
@@ -24,17 +27,19 @@ class NegociacaoController {
         event.preventDefault();
         this._listaNegociacoes.adiciona(this._criaNegociacao());
         this._mensagem.texto = 'Negociação adicionada com sucesso'; 
-        this._limpaFormulario();   
+        
+        this._service.enviarNegociacao(this._criaObjetoNegociacao());
+        console.log(this._criaObjetoNegociacao);
+        
+        this._limpaFormulario();
     }
 
     importaNegociacoes() {
 
-        const service = new NegociacaoService();
-
         Promise.all([
-            service.obterNegociacaoDaSemana(),
-            service.obterNegociacaoDaSemanaAnterior(),
-            service.obterNegociacaoDaSemanaRetrasada()
+            this._service.obterNegociacaoDaSemana(),
+            this._service.obterNegociacaoDaSemanaAnterior(),
+            this._service.obterNegociacaoDaSemanaRetrasada()
         ])
         .then(negociacoes => {
             
@@ -83,4 +88,15 @@ class NegociacaoController {
         this._inputValor.value = 0.0;
         this._inputData.focus();   
     };
+
+    _criaObjetoNegociacao() {
+
+        const negociacao = {
+            data: DateHelper.textoParaData(this._inputData.value),
+            quantidade: this._inputQuantidade.value,
+            valor: this._inputValor.value
+        }
+
+        return negociacao;
+    }
 };

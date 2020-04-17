@@ -67,4 +67,23 @@ class NegociacaoService {
                 });
         });
    };
+
+    enviarNegociacao(negociacao) {
+
+        return new Promise((resolve, reject) => {
+
+            this._http
+                .post('/negociacoes', negociacao)
+                .then(() => {
+                    
+                    console.log('negociação salva no servidor!');
+                    resolve('Negociação adicionada com sucesso!');
+                })
+                .catch((erro => {
+
+                    console.log(erro);
+                    reject(`Erro ao adicionar negociação: ${erro}!`);
+                }))
+        })
+    }
 };
